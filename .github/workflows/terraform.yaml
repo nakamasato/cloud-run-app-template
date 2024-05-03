@@ -1,0 +1,154 @@
+name: terraform
+
+on:
+  pull_request:
+    types:
+      - opened # default
+      - synchronize # default
+      - reopened # default
+      - closed
+
+env:
+  WORKING_DIRECTORY: terraform
+  COMMENT_BODY_IDENTIFIER: Terraform Plan Result Comment
+
+jobs:
+  terraform:
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    defaults:
+      run:
+        working-directory: terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.PROVIDER_NAME }}
+          service_account: ${{ secrets.SA_EMAIL }}
+
+      - name: set-tf-version
+        id: set-tf-version
+        run: |
+          echo "terraform_version=$(cat .terraform-version)" >> "$GITHUB_OUTPUT"
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.set-tf-version.outputs.terraform_version }}
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -backend-config=terraform.tfbackend
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+        continue-on-error: true
+
+      - name: find comment
+        uses: peter-evans/find-comment@v3
+        if: github.event.pull_request.merged != true
+        id: fc
+        with:
+          issue-number: ${{ github.event.number }}
+          body-includes: ${{ env.COMMENT_BODY_IDENTIFIER }}
+
+      - name: delete comment
+        if: steps.fc.outputs.comment-id != 0 && github.event.pull_request.merged != true
+        uses: jungwinter/comment@v1
+        with:
+          type: delete
+          comment_id: ${{ steps.fc.outputs.comment-id }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/github-script@v7
+        if: github.event.pull_request.merged != true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `<!-- ${{ env.COMMENT_BODY_IDENTIFIER }} -->
+            #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            <details><summary>Validation Output</summary>
+
+            \`\`\`\n
+            ${{ steps.validate.outputs.stdout }}
+            \`\`\`
+
+            </details>
+
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`\n
+            ${{ steps.plan.outputs.stdout }}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.WORKING_DIRECTORY }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - if: steps.plan.outcome == 'failure' || steps.fmt.outcome == 'failure'
+        name: make it fail when plan failed
+        run: exit 1
+
+      - name: Terraform Apply
+        id: apply
+        if: github.event.pull_request.merged == true
+        run: terraform apply -no-color -auto-approve -input=false
+
+      - uses: actions/github-script@v7
+        if: github.event.pull_request.merged == true
+        with:
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            #### Terraform Apply 📖\`${{ steps.apply.outcome }}\`
+
+            <details><summary>Show Apply</summary>
+
+            \`\`\`\n
+            ${{ steps.apply.outputs.stdout }}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.WORKING_DIRECTORY }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })

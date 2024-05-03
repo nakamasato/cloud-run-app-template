@@ -9,6 +9,7 @@ variable "region" {
   default     = "asia-northeast1"
 }
 
+### Cloud Run config start ###
 variable "image" {
   description = "The container image to deploy to Cloud Run"
   type        = string
@@ -26,20 +27,35 @@ variable "is_public" {
   default     = false
 }
 
-# variable "github_owner" {
-#   description = "The owner of the GitHub repository"
-#   type        = string
-#   default     = "nakamasato"
-# }
+### Cloud Run config end ###
 
-# variable "github_repo" {
-#   description = "The name of the GitHub repository"
-#   type        = string
-# }
+### GitHub Actions start ###
+variable "github_owner" {
+  description = "The owner of the GitHub repository"
+  type        = string
+}
 
-# variable "slack_bot_user_oauth_token" {
-#   description = "slack bot user token"
-#   type        = string
-#   sensitive   = true
-#   default     = "dummy"
-# }
+variable "github_repository" {
+  description = "The name of the GitHub repository"
+  type        = string
+}
+
+variable "github_actions_sa_name" {
+  description = "The name of the service account for GitHub Actions"
+  default     = "github-actions"
+  type        = string
+}
+
+variable "gh_oidc_pool_id" {
+  description = "The ID of the Workload Identity Pool for GitHub Actions"
+  default     = "github-actions"
+  type        = string
+}
+
+variable "gh_oidc_provider_id" {
+  description = "The ID of the OIDC provider for GitHub Actions"
+  default     = "github-actions"
+  type        = string
+}
+
+### GitHub Actions config end ###
