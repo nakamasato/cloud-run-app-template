@@ -27,14 +27,3 @@ module "gh_oidc" {
   }
 }
 
-resource "github_actions_secret" "sa_email" {
-  repository      = var.github_repository
-  secret_name     = "SA_EMAIL"
-  plaintext_value = google_service_account.github_actions.email
-}
-
-resource "github_actions_secret" "provider_name" {
-  repository      = var.github_repository
-  secret_name     = "PROVIDER_NAME"
-  plaintext_value = module.gh_oidc.provider_name
-}

@@ -75,9 +75,15 @@ GCP project is already created and linked to a billing account.
     terraform apply
     ```
 
-> [!WARNING]
-> It might fail for the first time, because it takes some time to enable the Cloud Run service API. Please try again.
+    > [!WARNING]
+    > It might fail for the first time, because it takes some time to enable the Cloud Run service API. Please try again.
 
+1. Set GitHub repository secrets
+
+    ```
+    gh secret set PROVIDER_NAME --body="$(terraform output github_actions_provider_name)"
+    gh secret set SA_NAME --body="$(terraform output github_actions_sa_name)"
+    ```
 
 ## More
 
