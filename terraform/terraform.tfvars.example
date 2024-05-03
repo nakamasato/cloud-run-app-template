@@ -1,0 +1,4 @@
+project = "your-project"
+region = "asia-northeast1"
+service_name = "your-app-name"
+image = "gcr.io/cloudrun/hello"
