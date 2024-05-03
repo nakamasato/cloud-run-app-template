@@ -14,6 +14,7 @@ locals {
   # The list of roles to grant to the GitHub Actions service account
   # Please edit this list to match your requirements
   github_actions_roles = [
+    "roles/serviceusage.serviceUsageViewer", # To allow GitHub Actions to list services `serviceusage.services.list`
     "roles/iam.workloadIdentityUser",        # To allow GitHub Actions to use Workload Identity
     "roles/iam.serviceAccountAdmin",         # To manage other service account
     "roles/resourcemanager.projectIamAdmin", # GitHub Actions identity
