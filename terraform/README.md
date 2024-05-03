@@ -26,7 +26,7 @@ terraform apply
 ```
 
 > [!WARNING]
-> It might fail for the first time, because the Cloud Run service account is not created yet. Please try again.
+> It might fail for the first time, because it takes some time to enable the Cloud Run service API. Please try again.
 
 ## More
 
