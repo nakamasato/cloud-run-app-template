@@ -32,6 +32,12 @@ GCP project is already created and linked to a billing account.
 
 ## Initial Setup
 
+1. Create your new GitHub repository from this template.
+
+    ```
+    gh repo create <your new repo name> --template=nakabonne/cloud-run-app-template
+    ```
+
 1. Write your own `terraform.tfvars` and `terraform.tfbackend` file.
 
     ```
@@ -84,6 +90,10 @@ GCP project is already created and linked to a billing account.
     gh secret set PROVIDER_NAME --body="$(terraform output github_actions_provider_name)"
     gh secret set SA_EMAIL --body="$(terraform output github_actions_sa_email)"
     ```
+
+1. Create a PR!
+
+    GitHub Actions will be run with the service account created by Terraform.
 
 ## More
 
