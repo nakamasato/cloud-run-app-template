@@ -87,8 +87,8 @@ GCP project is already created and linked to a billing account.
 1. Set GitHub repository secrets
 
     ```
-    gh secret set PROVIDER_NAME --body="$(terraform output github_actions_provider_name)"
-    gh secret set SA_EMAIL --body="$(terraform output github_actions_sa_email)"
+    terraform output github_actions_sa_email | tr -d '\n' | gh secret set SA_EMAIL --body=-
+    terraform output github_actions_provider_name | tr -d '\n' | gh secret set PROVIDER_NAME --body=-
     ```
 
 1. Create a PR!
