@@ -9,10 +9,10 @@ You can initialize a GitHub repository to manage Cloud Run services with Terrafo
 
 ## Steps
 
-1. Create a repo from this template.
+1. Create a repo (e.g. `cloud-run-app-sample`) from this template.
 
     ```
-    gh repo create <your new repo name> --template=nakabonne/cloud-run-app-template
+    gh repo create cloud-run-app-sample --public --template=nakamasato/cloud-run-app-template
     ```
 
 1. Create a GCS bucket for Terraform backend if needed (optional).
