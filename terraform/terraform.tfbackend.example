@@ -1,2 +1,2 @@
-bucket = "your bucket"
-prefix = "tfstate"
+bucket = "cloud-run-template-naka-terraform"
+prefix = "cloud-run-app-sample" # you can use app name for prefix if you use the same bucket for multiple apps

@@ -29,6 +29,12 @@ You can initialize a GitHub repository to manage Cloud Run services with Terrafo
     gsutil mb -p "<gcp project>" -l "<region>" gs://"<bucket>"
     ```
 
+1. Move to `terraform` directory.
+
+    ```
+    cd terraform
+    ```
+
 1. Write your own config files.
 
     `terraform.tfvars`:
@@ -43,7 +49,7 @@ You can initialize a GitHub repository to manage Cloud Run services with Terrafo
     ```
 
 1. Run `terraform init -backend-config=terraform.tfbackend`
-1. Run `terraform apply`
+1. Run `terraform apply`.
 1. Set up GitHub Actions secrets `PROVIDER_NAME` and `SA_EMAIL`.
 
     ```
