@@ -14,10 +14,11 @@ locals {
   # The list of roles to grant to the GitHub Actions service account
   # Please edit this list to match your requirements
   github_actions_roles = [
-    "roles/serviceusage.serviceUsageViewer", # To allow GitHub Actions to list services `serviceusage.services.list`
-    "roles/iam.workloadIdentityPoolViewer",  # To allow GitHub Actions to use Workload Identity `iam.workloadIdentityPools.get`
-    # "roles/iam.workloadIdentityUser",        # To allow GitHub Actions to use Workload Identity
+    # "roles/serviceusage.serviceUsageViewer", # To allow GitHub Actions to list services `serviceusage.services.list`
+    # "roles/iam.workloadIdentityPoolViewer",  # To allow GitHub Actions to use Workload Identity `iam.workloadIdentityPools.get`
+    "roles/iam.workloadIdentityUser",        # To allow GitHub Actions to use Workload Identity
     "roles/iam.serviceAccountAdmin",         # To manage other service account
+    # "roles/iam.serviceAccountUser",          # To allow github-actions sa to deploy cloud run (with specified sa)
     "roles/resourcemanager.projectIamAdmin", # GitHub Actions identity
     "roles/run.developer",                   # To allow GitHub Actions to deploy to Cloud Run
     # "roles/run.admin",                       # to grant run.invoker (Permission 'run.services.setIamPolicy' is necessary)

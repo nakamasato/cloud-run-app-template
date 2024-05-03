@@ -21,7 +21,7 @@ module "gh_oidc" {
   provider_id = var.gh_oidc_provider_id
   sa_mapping = {
     "github-actions" = {
-      sa_name   = google_service_account.github_actions.name
+      sa_name   = google_service_account.github_actions.id
       attribute = "attribute.repository/${var.github_owner}/${var.github_repository}"
     }
   }
