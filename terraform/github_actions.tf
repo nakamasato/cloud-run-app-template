@@ -25,7 +25,6 @@ module "gh_oidc" {
       attribute = "attribute.repository/${var.github_owner}/${var.github_repository}"
     }
   }
-  issuer_uri = "https://token.actions.githubusercontent.com"
 }
 
 resource "github_actions_secret" "sa_email" {

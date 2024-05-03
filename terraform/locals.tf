@@ -17,7 +17,7 @@ locals {
     "roles/serviceusage.serviceUsageViewer", # To allow GitHub Actions to list services `serviceusage.services.list`
     "roles/iam.workloadIdentityPoolViewer",  # To allow GitHub Actions to use Workload Identity `iam.workloadIdentityPools.get`
     # "roles/iam.workloadIdentityUser",        # To allow GitHub Actions to use Workload Identity
-    "roles/iam.serviceAccountAdmin",         # To manage other service account
+    "roles/iam.serviceAccountAdmin", # To manage other service account
     # "roles/iam.serviceAccountUser",          # To allow github-actions sa to deploy cloud run (with specified sa)
     "roles/resourcemanager.projectIamAdmin", # GitHub Actions identity
     "roles/run.developer",                   # To allow GitHub Actions to deploy to Cloud Run
